@@ -1,0 +1,59 @@
+exp5:
+Title: 5. File Handling
+
+----------------------------------------------------
+AIM
+To demonstrate Node.js file handling by writing employee information to a text file and reading the saved file contents.
+
+Algorithm
+1. Start
+
+2. Load Node.js file-system and path modules.
+
+3. Create a file path for page.txt in the program directory.
+
+4. Prepare the employee name and ID as text.
+
+5. Write the employee text to the file using UTF-8 encoding.
+
+6. If writing fails, display the write error and stop processing.
+
+7. If writing succeeds, display a file-created confirmation.
+
+8. Read the saved file using UTF-8 encoding.
+
+9. Display the file contents or report the read error.
+
+10. Stop
+
+---------------------------------------------------
+program:
+const fs=require('fs');
+const file1 ="page.text";
+const data=`
+Employee Name: 'pavithran',
+Employee ID: '002'
+`;
+fs.writeFile(file1,data,function(err)
+{
+   if(err){
+     console.log(err);
+  }else{
+     console.log("File created");
+  }
+   fs.readFile(file1, "utf8", (err,data)=>{
+      if(err){
+        console.log(err);
+     }else{
+       console.log(data);
+    }
+  })
+});
+---------------------------------------------------
+result:
+
+The program writes the employee record to page.txt and prints the saved UTF-8 contents after reading the file.
+
+HOW TO RUN THIS program
+1. cd <filename>
+2. node app.js

@@ -1,0 +1,706 @@
+exp7:
+Title: 7. Employee Information
+
+----------------------------------------------------
+AIM
+To build a Node.js employee information system with Express, MongoDB, Mongoose, and administrator authentication.
+
+Algorithm
+1. Start
+
+2. Load environment configuration, create the Express app, and add URL-encoded form and session middleware.
+
+3. Connect to MongoDB using the configured connection string.
+
+4. Find the configured administrator account and create it with a hashed password if it does not exist.
+
+5. Display the login form and verify submitted credentials against the stored password hash.
+
+6. Regenerate the session ID after successful login and protect employee routes with authentication middleware.
+
+7. Search and filter employee records and display the results on the dashboard.
+
+8. Validate and save new employee records using the Mongoose model.
+
+9. Provide routes to view, edit, and delete employee records, then start the server.
+
+10. Stop
+
+---------------------------------------------------
+program:
+
+                                # public
+                                # style.css
+:root {
+  color-scheme: light;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #172b3a;
+  background: #f3f6f8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.container {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 56px 0;
+}
+
+.narrow {
+  width: min(760px, calc(100% - 40px));
+}
+
+.page-header,
+.card-heading,
+.detail-heading,
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #527d76;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  margin-bottom: 4px;
+  font-size: 1.05rem;
+}
+
+.subtitle,
+.muted,
+.hint {
+  color: #687b88;
+}
+
+.subtitle {
+  margin-bottom: 0;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #176b5b;
+  color: #fff;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #105649;
+}
+
+.button-secondary {
+  border: 1px solid #d5dfe3;
+  background: #fff;
+  color: #344b57;
+}
+
+.button-secondary:hover {
+  background: #f4f7f8;
+}
+
+.button-danger {
+  background: #a53f43;
+}
+
+.button-danger:hover {
+  background: #853136;
+}
+
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.employee-card,
+.panel,
+.empty-state {
+  border: 1px solid #e1e8eb;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(23 43 58 / 4%);
+}
+
+.employee-card {
+  padding: 22px;
+}
+
+.card-heading {
+  justify-content: flex-start;
+  margin-bottom: 22px;
+}
+
+.card-heading .muted {
+  margin-bottom: 0;
+}
+
+.avatar {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #e3f1ed;
+  color: #176b5b;
+  font-size: 1.1rem;
+  font-weight: 750;
+}
+
+.summary,
+.detail-list {
+  margin: 0 0 18px;
+}
+
+.summary div,
+.detail-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid #edf1f2;
+}
+
+dt {
+  color: #687b88;
+}
+
+dd {
+  margin: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.summary {
+  font-size: 0.88rem;
+}
+
+.text-link,
+.back-link {
+  color: #176b5b;
+  font-weight: 700;
+}
+
+.text-link span {
+  margin-left: 4px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 24px;
+}
+
+.empty-state {
+  padding: 54px 24px;
+  text-align: center;
+}
+
+.empty-state p {
+  margin-bottom: 22px;
+  color: #687b88;
+}
+
+.form-header {
+  margin-bottom: 24px;
+}
+
+.panel {
+  padding: 28px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form-grid label {
+  display: grid;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.form-grid input,
+.form-grid textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d5dfe3;
+  border-radius: 7px;
+  background: #fff;
+  color: #172b3a;
+}
+
+.form-grid textarea {
+  resize: vertical;
+}
+
+.form-grid input:focus,
+.form-grid textarea:focus {
+  outline: 3px solid rgb(23 107 91 / 15%);
+  border-color: #176b5b;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.alert {
+  margin-bottom: 18px;
+  padding: 12px 15px;
+  border: 1px solid #f0c7c7;
+  border-radius: 8px;
+  background: #fff1f1;
+  color: #853136;
+}
+
+.detail-panel {
+  padding: 34px;
+}
+
+.detail-heading {
+  justify-content: flex-start;
+  margin-bottom: 28px;
+}
+
+.detail-heading h1 {
+  margin-bottom: 4px;
+}
+
+.avatar-large {
+  width: 64px;
+  height: 64px;
+  font-size: 1.5rem;
+}
+
+.detail-list {
+  margin-bottom: 26px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 32px 0;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .panel {
+    padding: 20px;
+  }
+}
+
+                                      # views
+                                      # add.ejs
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add employee | Employee Portal</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="container narrow">
+      <a class="back-link" href="/">← All employees</a>
+      <header class="form-header">
+        <p class="eyebrow">Employee directory</p>
+        <h1>Add an employee</h1>
+        <p class="subtitle">Enter the employee details below.</p>
+      </header>
+
+      <% if (error) { %>
+        <p class="alert" role="alert"><%= error %></p>
+      <% } %>
+
+      <form class="panel form-grid" action="/employees" method="post">
+        <label>Employee ID
+          <input name="empId" value="<%= employee.empId || '' %>" required>
+        </label>
+        <label>Full name
+          <input name="name" value="<%= employee.name || '' %>" required>
+        </label>
+        <label>Email
+          <input type="email" name="email" value="<%= employee.email || '' %>" required>
+        </label>
+        <label>Phone
+          <input type="tel" name="phone" value="<%= employee.phone || '' %>" required>
+        </label>
+        <label>Department
+          <input name="department" value="<%= employee.department || '' %>" required>
+        </label>
+        <label>Designation
+          <input name="designation" value="<%= employee.designation || '' %>" required>
+        </label>
+        <label>Salary
+          <input type="number" name="salary" min="0" step="0.01" value="<%= employee.salary ?? '' %>" required>
+        </label>
+        <label>Joining date
+          <input type="date" name="joiningDate" value="<%= employee.joiningDate || '' %>" required>
+        </label>
+        <label class="full-width">Address
+          <textarea name="address" rows="3"><%= employee.address || '' %></textarea>
+        </label>
+        <label class="full-width">Skills <span class="hint">(comma-separated)</span>
+          <input name="skills" value="<%= Array.isArray(employee.skills) ? employee.skills.join(', ') : '' %>" placeholder="JavaScript, Communication">
+        </label>
+        <div class="full-width form-actions">
+          <a class="button button-secondary" href="/">Cancel</a>
+          <button class="button" type="submit">Save employee</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>
+
+                                      # dashboard.ejs
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Portal</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="container">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">People directory</p>
+          <h1>Employee Information Portal</h1>
+          <p class="subtitle">Keep your employee records in one place.</p>
+        </div>
+        <a class="button" href="/employees/new">Add employee</a>
+      </header>
+
+      <% if (employees.length === 0) { %>
+        <section class="empty-state">
+          <h2>No employees yet</h2>
+          <p>Add your first employee to get started.</p>
+          <a class="button" href="/employees/new">Add an employee</a>
+        </section>
+      <% } else { %>
+        <section class="employee-grid" aria-label="Employees">
+          <% employees.forEach((employee) => { %>
+            <article class="employee-card">
+              <div class="card-heading">
+                <div class="avatar"><%= employee.name.charAt(0).toUpperCase() %></div>
+                <div>
+                  <h2><%= employee.name %></h2>
+                  <p class="muted"><%= employee.designation %></p>
+                </div>
+              </div>
+              <dl class="summary">
+                <div><dt>Employee ID</dt><dd><%= employee.empId %></dd></div>
+                <div><dt>Department</dt><dd><%= employee.department %></dd></div>
+                <div><dt>Email</dt><dd><%= employee.email %></dd></div>
+              </dl>
+              <a class="text-link" href="/employees/<%= employee._id %>">View details <span aria-hidden="true">→</span></a>
+            </article>
+          <% }) %>
+        </section>
+      <% } %>
+    </main>
+  </body>
+</html>
+
+                                      # not-found.ejs
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee not found | Employee Portal</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="container narrow">
+      <section class="empty-state">
+        <h1>Employee not found</h1>
+        <p>This record may have been deleted or the link may be invalid.</p>
+        <a class="button" href="/">Back to employees</a>
+      </section>
+    </main>
+  </body>
+</html>
+
+                                      # view.ejs
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= employee.name %> | Employee Portal</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="container narrow">
+      <a class="back-link" href="/">← All employees</a>
+      <section class="panel detail-panel">
+        <div class="detail-heading">
+          <div class="avatar avatar-large"><%= employee.name.charAt(0).toUpperCase() %></div>
+          <div>
+            <p class="eyebrow"><%= employee.department %></p>
+            <h1><%= employee.name %></h1>
+            <p class="subtitle"><%= employee.designation %></p>
+          </div>
+        </div>
+        <dl class="detail-list">
+          <div><dt>Employee ID</dt><dd><%= employee.empId %></dd></div>
+          <div><dt>Email</dt><dd><%= employee.email %></dd></div>
+          <div><dt>Phone</dt><dd><%= employee.phone %></dd></div>
+          <div><dt>Salary</dt><dd><%= Number(employee.salary).toLocaleString() %></dd></div>
+          <div><dt>Joining date</dt><dd><%= employee.joiningDate.toLocaleDateString() %></dd></div>
+          <div><dt>Address</dt><dd><%= employee.address || '—' %></dd></div>
+          <div><dt>Skills</dt><dd><%= employee.skills.length ? employee.skills.join(', ') : '—' %></dd></div>
+        </dl>
+        <form action="/employees/<%= employee._id %>/delete" method="post" onsubmit="return confirm('Delete this employee record?')">
+          <button class="button button-danger" type="submit">Delete employee</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
+
+                                          # employee.js
+const mongoose = require("mongoose");
+
+const employeeSchema = new mongoose.Schema(
+  {
+    empId: { type: String, required: true, unique: true, trim: true },
+    name: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    },
+    phone: { type: String, required: true, trim: true },
+    department: { type: String, required: true, trim: true },
+    designation: { type: String, required: true, trim: true },
+    salary: { type: Number, required: true, min: 0 },
+    joiningDate: { type: Date, required: true },
+    address: { type: String, trim: true },
+    skills: { type: [String], default: [] },
+  },
+  { timestamps: true },
+);
+
+module.exports = mongoose.model("Employee", employeeSchema);
+
+                                          # server.js
+const express = require("express");
+const mongoose = require("mongoose");
+const path = require("path");
+const Employee = require("./employee");
+
+const app = express();
+const PORT = Number(process.env.PORT) || 3002;
+const MONGO_URI =
+  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/employee_portal";
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", async (req, res, next) => {
+  try {
+    const employees = await Employee.find().sort({ joiningDate: -1, name: 1 });
+    res.render("dashboard", { employees });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get("/employees/new", (req, res) => {
+  res.render("add", { error: null, employee: {} });
+});
+
+app.post("/employees", async (req, res) => {
+  const employee = {
+    empId: req.body.empId,
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    department: req.body.department,
+    designation: req.body.designation,
+    salary: req.body.salary,
+    joiningDate: req.body.joiningDate,
+    address: req.body.address,
+    skills: (req.body.skills || "")
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter(Boolean),
+  };
+
+  try {
+    await Employee.create(employee);
+    res.redirect("/");
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).render("add", {
+        error: "That employee ID is already in use.",
+        employee,
+      });
+    }
+
+    if (error instanceof mongoose.Error.ValidationError || error instanceof mongoose.Error.CastError) {
+      return res.status(400).render("add", {
+        error: "Please check the employee details and try again.",
+        employee,
+      });
+    }
+
+    console.error("Could not save employee:", error);
+    res.status(500).render("add", {
+      error: "Unable to save the employee right now. Please try again.",
+      employee,
+    });
+  }
+});
+
+app.get("/employees/:id", async (req, res, next) => {
+  try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(404).render("not-found");
+    }
+
+    const employee = await Employee.findById(req.params.id);
+    if (!employee) {
+      return res.status(404).render("not-found");
+    }
+
+    res.render("view", { employee });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post("/employees/:id/delete", async (req, res, next) => {
+  try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(404).render("not-found");
+    }
+
+    const employee = await Employee.findByIdAndDelete(req.params.id);
+    if (!employee) {
+      return res.status(404).render("not-found");
+    }
+
+    res.redirect("/");
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.use((error, req, res, next) => {
+  console.error("Request failed:", error);
+  if (res.headersSent) {
+    return next(error);
+  }
+  res.status(500).send("Something went wrong. Please try again.");
+});
+
+async function start() {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log("Connected to MongoDB");
+    app.listen(PORT, () => {
+      console.log(`Employee portal running at http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Could not connect to MongoDB:", error.message);
+    process.exitCode = 1;
+  }
+}
+
+if (require.main === module) {
+  start();
+}
+
+module.exports = app;
+
+---------------------------------------------------
+result:
+
+The Express application connects to MongoDB, authenticates an administrator, and provides protected employee record management routes. Configure MONGO_URI and SESSION_SECRET; the default admin credentials are for local demonstration only and should be changed using ADMIN_USERNAME and ADMIN_PASSWORD.
+
+
+# HOW TO RUN THIS program (in terminal)
+1. cd <filename>
+2. npm install
+3. npm start
+4. npm init -y
+5. npm install express mongoose ejs 
+6. node server.js

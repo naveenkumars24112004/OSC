@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OSC Lab</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        select {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 500px;
+            padding: 15px;
+            font-family: monospace;
+            border: 1px solid #999;
+            background: #1e1e1e;
+            color: #00ff9c;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>OSC Lab</h1>
+
+<label>Choose a file:</label>
+<select id="fileSelect" onchange="loadFile()">
+    <option value="files/exp1_image_slide_show.txt">1. Image slide show</option>
+    <option value="files/exp2_electricity_bill.txt">2. electricity bill</option>
+    <option value="files/exp3_web_based_feedback.txt">3. web-based feedback</option>
+    <option value="files/exp4_user%20login.txt">4. user login</option>
+    <option value="files/exp5_file%20handling.txt">5. file handling</option>
+    <option value="files/exp6_student_registration.txt">6. student registration</option>
+    <option value="files/exp7_employee_information.txt">7. employee information</option>
+    <option value="files/exp8_git_repository.txt">8. git repository</option>
+</select>
+
+<br><br>
+
+<textarea id="viewer"></textarea>
+
+<script>
+function loadFile() {
+    let file = document.getElementById("fileSelect").value;
+
+    fetch(file)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("File not found");
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById("viewer").value = data;
+        })
+        .catch(err => {
+            document.getElementById("viewer").value = "Error loading file: " + err.message;
+        });
+}
+
+// Load first file automatically
+window.onload = loadFile;
+</script>
+
+</body>
+</html>
