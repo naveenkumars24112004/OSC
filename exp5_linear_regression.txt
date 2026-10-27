@@ -1,0 +1,111 @@
+exp5:
+Title: 5. Linear Regression Model and Result Visualization
+
+----------------------------------------------------
+AIM
+To develop a Linear Regression model using Python to predict house prices based on house size and visualize the results using Matplotlib.
+
+Algorithm
+Step 1: Start the program.
+
+Step 2: Import the required libraries (NumPy, Matplotlib, and LinearRegression).
+
+Step 3: Create the input dataset (House Size) and output dataset (House Price).
+
+Step 4: Reshape the input data into a two-dimensional array.
+
+Step 5: Create a Linear Regression model.
+
+Step 6: Train the model using the fit() method.
+
+Step 7: Predict the output values using the trained model.
+
+Step 8: Predict the price for a new house size.
+
+Step 9: Display the slope, intercept, and predicted price.
+
+Step 10: Plot the actual data using a scatter plot.
+
+Step 11: Plot the regression line using the predicted values.
+
+Step 12: Plot the new house prediction on the graph.
+
+Step 13: Display the graph with appropriate title, labels, and legend.
+
+Step 14: Stop.
+
+---------------------------------------------------
+program:
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Independent Variable (House Size)
+X = np.array([800, 1000, 1200, 1400, 1600, 1800]).reshape(-1, 1)
+
+# Dependent Variable (House Price)
+Y = np.array([35, 45, 55, 65, 75, 85])
+
+# Create the model
+model = LinearRegression()
+
+# Train the model
+model.fit(X, Y)
+
+# Predict values
+predicted = model.predict(X)
+
+# Display model parameters
+print("Slope (m):", model.coef_[0])
+print("Intercept (c):", model.intercept_)
+
+# Predict the price of a 1525 sq.ft house
+new_house = np.array([[1525]])
+predicted_price = model.predict(new_house)
+
+print("Predicted Price for 1525 sq.ft house:",
+      predicted_price[0])
+
+# Plot actual data
+plt.scatter(
+    X, Y,
+    color="blue",
+    label="Actual Data"
+)
+
+# Plot regression line
+plt.plot(
+    X, predicted,
+    color="red",
+    linewidth=2,
+    label="Regression Line"
+)
+
+# Plot new predicted value
+plt.scatter(
+    1525,
+    predicted_price[0],
+    color="green",
+    s=100,
+    label="New Prediction"
+)
+
+# Labels
+plt.title("House Size vs House Price")
+plt.xlabel("House Size (sq.ft)")
+plt.ylabel("House Price (Lakhs)")
+plt.legend()
+
+# Display graph
+plt.show()
+
+---------------------------------------------------
+Output:
+Slope: 0.05
+Intercept: -5.0
+Predicted Price: 71.25 Lakhs
+
+---------------------------------------------------
+result:
+
+The Linear Regression model was successfully implemented to predict the dependent variable and visualize the regression results.

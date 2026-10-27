@@ -1,77 +1,326 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>OSC Lab</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & ML Lab Practical Viewer</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial;
-            background: #f5f5f5;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 24px;
+            margin: 0;
+            color: #1c1e21;
+        }
+
+        .header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e4e6eb;
         }
 
         h1 {
+            color: #1a1a1a;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e7f3ff;
+            color: #1877f2;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .dataset-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dataset-pill:hover {
+            background: #ffe8a1;
+            color: #533f03;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        label {
+            font-weight: 600;
             color: #333;
+            font-size: 15px;
         }
 
         select {
-            padding: 5px;
-            margin-bottom: 10px;
+            padding: 9px 14px;
+            font-size: 14px;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            background: #fff;
+            min-width: 400px;
+            max-width: 100%;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: #1877f2;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            background: #218838;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #17a2b8;
+        }
+
+        .btn-secondary:hover {
+            background: #138496;
+        }
+
+        .btn-dataset {
+            background: #fd7e14;
+            color: #fff;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-dataset:hover {
+            background: #e86805;
+        }
+
+        #copyStatus {
+            font-size: 14px;
+            color: #28a745;
+            font-weight: 600;
+            margin-left: 8px;
+            transition: opacity 0.3s;
         }
 
         textarea {
             width: 100%;
-            height: 500px;
-            padding: 15px;
-            font-family: monospace;
-            border: 1px solid #999;
+            height: calc(100vh - 190px);
+            min-height: 520px;
+            padding: 18px;
+            font-family: "Cascadia Code", Consolas, Monaco, "Courier New", monospace;
+            font-size: 14px;
+            border: 1px solid #333;
+            border-radius: 8px;
             background: #1e1e1e;
             color: #00ff9c;
             overflow-y: scroll;
+            box-sizing: border-box;
+            line-height: 1.5;
+            white-space: pre;
+            tab-size: 4;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #00ff9c;
         }
     </style>
 </head>
 
 <body>
 
-<h1>OSC Lab</h1>
+<div class="header-bar">
+    <h1>AI & ML Lab <span class="badge">10 Experiments</span></h1>
+    <button class="dataset-pill" onclick="downloadLoanCsv()" title="Download the 100-record Loan dataset CSV file">
+        📥 Download loan_data_100_records.csv
+    </button>
+</div>
 
-<label>Choose a file:</label>
-<select id="fileSelect" onchange="loadFile()">
-    <option value="files/exp1_image_slide_show.txt">1. Image slide show</option>
-    <option value="files/exp2_electricity_bill.txt">2. electricity bill</option>
-    <option value="files/exp3_web_based_feedback.txt">3. web-based feedback</option>
-    <option value="files/exp4_user%20login.txt">4. user login</option>
-    <option value="files/exp5_file%20handling.txt">5. file handling</option>
-    <option value="files/exp6_student_registration.txt">6. student registration</option>
-    <option value="files/exp7_employee_information.txt">7. employee information</option>
-    <option value="files/exp8_git_repository.txt">8. git repository</option>
-</select>
+<div class="controls">
+    <label for="fileSelect">Choose an experiment:</label>
+    <select id="fileSelect" onchange="loadFile()">
+        <option value="exp1_state_space_search.txt">1. State-Space Search (BFS & DFS)</option>
+        <option value="exp2_8_puzzle_problem.txt">2. 8-Puzzle Problem</option>
+        <option value="exp3_a_star_search.txt">3. Optimal Pathfinding (A* Search)</option>
+        <option value="exp4_hill_climbing.txt">4. Optimization (Hill Climbing)</option>
+        <option value="exp5_linear_regression.txt">5. Linear Regression & Visualization</option>
+        <option value="exp6_logistic_regression.txt">6. Binary Classification (Logistic Regression)</option>
+        <option value="exp7_svm_classification.txt">7. Classification (SVM)</option>
+        <option value="exp8_knn_classification.txt">8. Classification (KNN Algorithm)</option>
+        <option value="exp9_feedforward_neural_network.txt">9. Feedforward Neural Network (TensorFlow)</option>
+        <option value="exp10_cnn_image_classification.txt">10. Image Classification (CNN)</option>
+    </select>
+    <button class="btn" onclick="copyContent()">Copy Content</button>
+    <button class="btn btn-secondary" onclick="downloadCurrentFile()">Download .txt</button>
+    <button id="btnDownloadCsv" class="btn btn-dataset" onclick="downloadLoanCsv()" style="display: none;">
+        📥 Download Dataset (.csv)
+    </button>
+    <span id="copyStatus"></span>
+</div>
 
-<br><br>
-
-<textarea id="viewer"></textarea>
+<textarea id="viewer" spellcheck="false" readonly></textarea>
 
 <script>
-function loadFile() {
-    let file = document.getElementById("fileSelect").value;
+const embeddedData = {"exp1_state_space_search.txt": "exp1:\nTitle: 1. State-Space Search Using Breadth-First Search (BFS) and Depth-First Search (DFS)\n\n----------------------------------------------------\nAIM\nTo implement state-space search algorithms using Breadth-First Search (BFS) and Depth-First Search (DFS) for a basic graph problem.\n\nAlgorithm\nStep 1: Start the program.\n\nStep 2: Create a graph using an adjacency list.\n\nStep 3: Define the starting node as A.\n\nStep 4: Create a BFS function with graph and start node as inputs.\n\nStep 5: Initialize an empty visited list for BFS.\n\nStep 6: Initialize a queue with the starting node.\n\nStep 7: Remove the first node from the queue.\n\nStep 8: If the node is not visited, add it to the visited list.\n\nStep 9: Add all adjacent nodes of the current node to the queue.\n\nStep 10: Repeat Steps 7 to 9 until the queue becomes empty.\n\nStep 11: Create a DFS function with graph and start node as inputs.\n\nStep 12: Initialize an empty visited list and a stack with the starting node.\n\nStep 13: Remove the last node from the stack.\n\nStep 14: If the node is not visited, add it to the visited list and add its adjacent nodes to the stack in reverse order.\n\nStep 15: Repeat Steps 13 and 14 until the stack becomes empty, then display the BFS and DFS traversal order.\n\n---------------------------------------------------\nprogram:\n# Graph represented as an adjacency list\ngraph = {\n    'A': ['B', 'C'],\n    'B': ['D', 'E'],\n    'C': ['F'],\n    'D': [],\n    'E': ['G'],\n    'F': [],\n    'G': []\n}\n\n# Breadth-First Search (BFS)\ndef bfs(graph, start):\n    visited = []\n    queue = [start]\n    while queue:\n        node = queue.pop(0)  # Remove first element\n        if node not in visited:\n            visited.append(node)\n            queue.extend(graph[node])\n    return visited\n\n# Depth-First Search (DFS)\ndef dfs(graph, start):\n    visited = []\n    stack = [start]\n    while stack:\n        node = stack.pop()  # Remove last element\n        if node not in visited:\n            visited.append(node)\n            # Reverse to maintain left-to-right traversal\n            stack.extend(reversed(graph[node]))\n    return visited\n# Main Program\nstart_node = 'A'\nprint(\"Breadth-First Search (BFS):\")\nprint(bfs(graph, start_node))\nprint(\"\\nDepth-First Search (DFS):\")\nprint(dfs(graph, start_node))\n\n---------------------------------------------------\nOutput:\nBreadth-First Search (BFS):\n['A', 'B', 'C', 'D', 'E', 'F', 'G']\nDepth-First Search (DFS):\n['A', 'B', 'D', 'E', 'G', 'C', 'F']\n\n---------------------------------------------------\nresult:\n\nThe program was executed successfully and the graph was traversed using both Breadth-First Search (BFS) and Depth-First Search (DFS) algorithms.\n\n\n\n", "exp2_8_puzzle_problem.txt": "exp2:\nTitle: 2. 8-Puzzle Problem Using State-Space Search\n\n----------------------------------------------------\nAIM\nTo solve the 8-Puzzle Problem using state-space search by representing the initial and goal states and finding a sequence of valid moves to reach the goal state.\n\nAlgorithm\nStep 1: Start\n\nStep 2: Define the initial state and goal state.\n\nStep 3: Create an empty queue.\n\nStep 4: Insert the initial state into the queue.\n\nStep 5: Create an empty visited list.\n\nStep 6: Mark the initial state as visited.\n\nStep 7: Remove a state from the front of the queue.\n\nStep 8: Check whether the current state is the goal state.\n\nStep 9: If the goal state is reached, Display the solution and Stop.\n\nStep 10: Find the position of the blank tile (0).\n\nStep 11: Generate all possible new states by moving the blank tile Up, Down, Left, or Right.\n\nStep 12: For each generated state, check whether it is already visited.\n\nStep 13: If not visited, mark it as visited and insert it into the queue.\n\nStep 14: Repeat Steps 7 to 13 until the queue becomes empty.\n\nStep 15: If the queue becomes empty, display \"No Solution Found\".\n\nStep 16: Stop.\n\n---------------------------------------------------\nprogram:\nfrom collections import deque\n# Goal state\ngoal_state = [\n    [1, 2, 3],\n    [4, 5, 6],\n    [7, 8, 0]\n]\n\n# Convert 2D list into tuple\ndef to_tuple(state):\n    return tuple(tuple(row) for row in state)\n# Find blank space position\ndef find_blank(state):\n    for i in range(3):\n        for j in range(3):\n            if state[i][j] == 0:\n                return i, j\n\n# Generate next possible states\ndef get_neighbors(state):\n    neighbors = []\n    x, y = find_blank(state)\n    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    for dx, dy in moves:\n        new_x = x + dx\n        new_y = y + dy\n        if 0 <= new_x < 3 and 0 <= new_y < 3:\n            new_state = [row[:] for row in state]\n            new_state[x][y], new_state[new_x][new_y] = \\\n                new_state[new_x][new_y], new_state[x][y]\n            neighbors.append(new_state)\n    return neighbors\n# BFS search\ndef solve_puzzle(start_state):\n    queue = deque()\n    visited = set()\n    queue.append((start_state, []))\n    visited.add(to_tuple(start_state))\n    while queue:\n        current_state, path = queue.popleft()\n        if current_state == goal_state:\n            return path + [current_state]\n        for neighbor in get_neighbors(current_state):\n            if to_tuple(neighbor) not in visited:\n                visited.add(to_tuple(neighbor))\n                queue.append((neighbor, path + [current_state]))\n    return None\n\n# Display puzzle state\ndef print_state(state):\n    for row in state:\n        print(row)\n    print()\n\n# Main program\nstart_state = [\n    [1, 0, 3],\n    [4, 2, 6],\n    [7, 5, 8]\n]\n\nsolution = solve_puzzle(start_state)\n\nif solution:\n    print(\"Solution Found!\")\n    print(\"Number of moves:\", len(solution) - 1)\n    for step, state in enumerate(solution):\n        print(\"\\nStep\", step)\n        print_state(state)\nelse:\n    print(\"No solution found.\")\n\n---------------------------------------------------\nOutput:\nSolution Found!\nNumber of moves: 3\nStep 0\n[1, 0, 3]\n[4, 2, 6]\n[7, 5, 8]\nStep 1\n[1, 2, 3]\n[4, 0, 6]\n[7, 5, 8]\nStep 2\n[1, 2, 3]\n[4, 5, 6]\n[7, 0, 8]\nStep 3\n[1, 2, 3]\n[4, 5, 6]\n[7, 8, 0]\n\n---------------------------------------------------\nresult:\n\nThus, the classic 8-puzzle problem was solved using state-space representation and Breadth-First Search in Python.\n", "exp3_a_star_search.txt": "exp3:\nTitle: 3. Optimal Pathfinding Using A* Search Algorithm\n\n----------------------------------------------------\nAIM\nTo design and implement the A* Search algorithm using a suitable heuristic function to find the optimal path from a start node to a goal node.\n\nAlgorithm\nStep 1: Start.\n\nStep 2: Define the graph with nodes, edges, and their corresponding path costs.\n\nStep 3: Define the heuristic value h(n) for each node.\n\nStep 4: Insert the start node into the priority queue (OPEN list) with its f(n) value.\n\nStep 5: Remove the node having the smallest f(n) value from the priority queue.\n\nStep 6: If the selected node is the goal node, display the optimal path and total cost, then stop.\n\nStep 7: Otherwise, mark the selected node as visited.\n\nStep 8: Generate all neighboring nodes of the current node.\n\nStep 9: For each neighboring node, calculate:\n\ng(n) = Actual cost from the start node.\n\nh(n) = Heuristic estimate to the goal.\n\nf(n)=g(n)+h(n).\n\nStep 10: Insert the neighboring nodes into the priority queue according to their f(n) values.\n\nStep 11: Repeat Steps 5 to 10 until the goal node is reached or no path exists.\n\nStep 12: Stop.\n\n---------------------------------------------------\nprogram:\nimport heapq\n# Graph with edge costs\ngraph = {\n    'A': [('B', 2), ('C', 4)],\n    'B': [('D', 7), ('E', 3)],\n    'C': [('F', 2)],\n    'D': [('G', 1)],\n    'E': [('G', 5)],\n    'F': [('G', 3)],\n    'G': []\n}\n# Heuristic values\nheuristic = {\n    'A': 9,\n    'B': 8,\n    'C': 5,\n    'D': 1,\n    'E': 5,\n    'F': 3,\n    'G': 0\n}\n\n# A* Search Function\ndef astar(start, goal):\n    # Priority Queue\n    queue = []\n    # (f, g, node, path)\n    heapq.heappush(queue, (heuristic[start], 0, start, [start]))\n    visited = []\n    while queue:\n        f, g, current, path = heapq.heappop(queue)\n        # Ignore already visited nodes\n        if current in visited:\n            continue\n        print(\"Current Node :\", current)\n        print(\"g(n) =\", g)\n        print(\"h(n) =\", heuristic[current])\n        print(\"f(n) =\", f)\n        print()\n\n        visited.append(current)\n\n        # Goal reached\n        if current == goal:\n            return path, g\n\n        # Visit neighbouring nodes\n        for neighbor, cost in graph[current]:\n            if neighbor not in visited:\n                new_g = g + cost\n                new_f = new_g + heuristic[neighbor]\n                heapq.heappush(queue,\n                               (new_f,\n                                new_g,\n                                neighbor,\n                                path + [neighbor]))\n    return None, None\n\n# Main Program\nstart = 'A'\ngoal = 'G'\npath, cost = astar(start, goal)\n\nprint(\"-------------------------\")\nprint(\"Optimal Path :\", \" -> \".join(path))\nprint(\"Total Cost   :\", cost)\n\n---------------------------------------------------\nOutput:\nCurrent Node : A\ng(n) = 0\nh(n) = 9\nf(n) = 9\nCurrent Node : C\ng(n) = 4\nh(n) = 5\nf(n) = 9\nCurrent Node : F\ng(n) = 6\nh(n) = 3\nf(n) = 9\nCurrent Node : G\ng(n) = 9\nh(n) = 0\nf(n) = 9\n-------------------------\nOptimal Path : A -> C -> F -> G\nTotal Cost : 9\n\n---------------------------------------------------\nresult:\n\nThus, the A* Search algorithm was successfully implemented using a suitable heuristic function to find the optimal path from the start node to the goal node\n\n", "exp4_hill_climbing.txt": "exp4:\nTitle: 4. Optimization Problem Using Hill Climbing Algorithm\n\n----------------------------------------------------\nAIM\nTo implement the Hill Climbing algorithm for solving an optimization problem and find the optimal solution using an objective function.\n\nAlgorithm\nStep 1: Start.\n\nStep 2: Define the objective function to be optimized.\n\nStep 3: Select an initial solution (starting point).\n\nStep 4: Generate the neighboring solutions (left and right).\n\nStep 5: Evaluate the objective function for the current solution and its neighboring solutions.\n\nStep 6: Compare the neighboring solutions with the current solution.\n\nStep 7: Move to the neighboring solution if it has a better objective value.\n\nStep 8: Repeat Steps 4 to 7 until no neighboring solution has a better objective value.\n\nStep 9: Display the optimal solution and the maximum objective value.\n\nStep 10: Stop.\n\n---------------------------------------------------\nprogram:\n# Objective Function\ndef objective_function(x):\n    return -x * x + 10 * x\n\n# Hill Climbing Function\ndef hill_climbing(start):\n    current = start\n    step_size = 1\n    while True:\n        # Generate neighboring solutions\n        left = current - step_size\n        right = current + step_size\n        # Evaluate current and neighboring states\n        current_value = objective_function(current)\n        left_value = objective_function(left)\n        right_value = objective_function(right)\n        # Display current state\n        print(\"Current x =\", current, \" Objective Value =\", current_value)\n        # Move to the better neighboring state\n        if left_value > current_value:\n            current = left\n        elif right_value > current_value:\n            current = right\n        # Stop if no better neighbor exists\n        else:\n            return current, current_value\n\n# Main Program\nstart_point = 0\nbest_x, best_value = hill_climbing(start_point)\nprint(\"\\nBest Solution Found\")\nprint(\"Optimal x =\", best_x)\nprint(\"Maximum Value =\", best_value)\n\n---------------------------------------------------\nOutput:\nCurrent x = 0  Objective Value = 0\nCurrent x = 1  Objective Value = 9\nCurrent x = 2  Objective Value = 16\nCurrent x = 3  Objective Value = 21\nCurrent x = 4  Objective Value = 24\nCurrent x = 5  Objective Value = 25\nBest Solution Found\nOptimal x = 5\nMaximum Value = 25\n\n---------------------------------------------------\nresult:\n\nThus, the Hill Climbing algorithm was successfully implemented and found the optimal solution at x = 5 with a maximum value of 25.\n", "exp5_linear_regression.txt": "exp5:\nTitle: 5. Linear Regression Model and Result Visualization\n\n----------------------------------------------------\nAIM\nTo develop a Linear Regression model using Python to predict house prices based on house size and visualize the results using Matplotlib.\n\nAlgorithm\nStep 1: Start the program.\n\nStep 2: Import the required libraries (NumPy, Matplotlib, and LinearRegression).\n\nStep 3: Create the input dataset (House Size) and output dataset (House Price).\n\nStep 4: Reshape the input data into a two-dimensional array.\n\nStep 5: Create a Linear Regression model.\n\nStep 6: Train the model using the fit() method.\n\nStep 7: Predict the output values using the trained model.\n\nStep 8: Predict the price for a new house size.\n\nStep 9: Display the slope, intercept, and predicted price.\n\nStep 10: Plot the actual data using a scatter plot.\n\nStep 11: Plot the regression line using the predicted values.\n\nStep 12: Plot the new house prediction on the graph.\n\nStep 13: Display the graph with appropriate title, labels, and legend.\n\nStep 14: Stop.\n\n---------------------------------------------------\nprogram:\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom sklearn.linear_model import LinearRegression\n\n# Independent Variable (House Size)\nX = np.array([800, 1000, 1200, 1400, 1600, 1800]).reshape(-1, 1)\n\n# Dependent Variable (House Price)\nY = np.array([35, 45, 55, 65, 75, 85])\n\n# Create the model\nmodel = LinearRegression()\n\n# Train the model\nmodel.fit(X, Y)\n\n# Predict values\npredicted = model.predict(X)\n\n# Display model parameters\nprint(\"Slope (m):\", model.coef_[0])\nprint(\"Intercept (c):\", model.intercept_)\n\n# Predict the price of a 1525 sq.ft house\nnew_house = np.array([[1525]])\npredicted_price = model.predict(new_house)\n\nprint(\"Predicted Price for 1525 sq.ft house:\",\n      predicted_price[0])\n\n# Plot actual data\nplt.scatter(\n    X, Y,\n    color=\"blue\",\n    label=\"Actual Data\"\n)\n\n# Plot regression line\nplt.plot(\n    X, predicted,\n    color=\"red\",\n    linewidth=2,\n    label=\"Regression Line\"\n)\n\n# Plot new predicted value\nplt.scatter(\n    1525,\n    predicted_price[0],\n    color=\"green\",\n    s=100,\n    label=\"New Prediction\"\n)\n\n# Labels\nplt.title(\"House Size vs House Price\")\nplt.xlabel(\"House Size (sq.ft)\")\nplt.ylabel(\"House Price (Lakhs)\")\nplt.legend()\n\n# Display graph\nplt.show()\n\n---------------------------------------------------\nOutput:\nSlope: 0.05\nIntercept: -5.0\nPredicted Price: 71.25 Lakhs\n\n---------------------------------------------------\nresult:\n\nThe Linear Regression model was successfully implemented to predict the dependent variable and visualize the regression results.\n", "exp6_logistic_regression.txt": "exp6:\nTitle: 6. Binary Classification Using Logistic Regression\n\n----------------------------------------------------\nAIM\nTo build a Logistic Regression classifier for a binary classification task (Spam Detection) and classify an email as Spam or Not Spam based on its text content.\n\nAlgorithm\nStep 1: Start the program.\n\nStep 2: Import the required libraries (CountVectorizer and LogisticRegression).\n\nStep 3: Create the training dataset containing email messages and their corresponding labels (Spam = 1, Not Spam = 0).\n\nStep 4: Display the training data and labels.\n\nStep 5: Create a CountVectorizer object to convert text data into numerical features.\n\nStep 6: Transform the training emails into a feature matrix using fit_transform().\n\nStep 7: Create a Logistic Regression model.\n\nStep 8: Train the Logistic Regression model using the fit() method with the feature matrix and labels.\n\nStep 9: Create the testing dataset containing the email to be classified.\n\nStep 10: Display the testing email.\n\nStep 11: Transform the testing email into numerical features using the trained vectorizer.\n\nStep 12: Predict whether the email is Spam or Not Spam using the trained Logistic Regression model.\n\nStep 13: Display the prediction result.\n\nStep 14: If the prediction is 1, display \"The email is classified as SPAM.\"\n\nStep 15: Otherwise, display \"The email is classified as NOT SPAM.\"\n\nStep 16: Stop the program.\n\n---------------------------------------------------\nprogram:\nfrom sklearn.feature_extraction.text import CountVectorizer\nfrom sklearn.linear_model import LogisticRegression\n\n# Training Data\ntrain_emails = [\n    \"Congratulations! You won a free lottery\",\n    \"Claim your prize now\",\n    \"Limited time offer\",\n    \"Meeting at 10 AM tomorrow\",\n    \"Project report submission\",\n    \"Please attend the class today\"\n]\n\n# 1 = Spam, 0 = Not Spam\ntrain_labels = [1, 1, 1, 0, 0, 0]\nprint(\"===== TRAINING DATA =====\")\nfor email, label in zip(train_emails, train_labels):\n    print(email, \"-->\", \"Spam\" if label == 1 else \"Not Spam\")\n# Convert text into numerical features\nvectorizer = CountVectorizer()\nX_train = vectorizer.fit_transform(train_emails)\n# Train Logistic Regression Model\nmodel = LogisticRegression()\nmodel.fit(X_train, train_labels)\n\n# Testing Data\ntest_email = [\"Free prize available now\"]\nprint(\"\\n===== TESTING DATA =====\")\nprint(test_email[0])\nX_test = vectorizer.transform(test_email)\n\n\n# Prediction\nprediction = model.predict(X_test)\nprint(\"\\n===== PREDICTION =====\")\nprint(prediction)\n\n# Result\nprint(\"\\n===== RESULT =====\")\nif prediction[0] == 1:\n    print(\"The email is classified as SPAM.\")\nelse:\n    print(\"The email is classified as NOT SPAM.\")\n\n---------------------------------------------------\nOutput:\n===== TRAINING DATA =====\nCongratulations! You won a free lottery --> Spam\nClaim your prize now --> Spam\nLimited time offer --> Spam\nMeeting at 10 AM tomorrow --> Not Spam\nProject report submission --> Not Spam\nPlease attend the class today --> Not Spam\n===== TESTING DATA =====\nFree prize available now\n===== PREDICTION =====\n[1]\n===== RESULT =====\nThe email is classified as SPAM.\n\n---------------------------------------------------\nresult:\n\nThe Logistic Regression model was successfully implemented to classify emails as Spam or Not Spam.\n\n", "exp7_svm_classification.txt": "exp7:\nTitle: 7. Classification Using Support Vector Machine (SVM)\n\n----------------------------------------------------\nAIM\nTo apply the Support Vector Machine (SVM) algorithm on the Iris dataset and evaluate its classification performance using accuracy and other performance metrics.\n\nAlgorithm\nStep 1: Start the program.\n\nStep 2: Import the required libraries (load_iris, train_test_split, SVC, and evaluation metrics).\n\nStep 3: Load the Iris dataset.\n\nStep 4: Separate the dataset into input features (X) and target labels (y).\n\nStep 5: Split the dataset into training and testing sets using train_test_split().\n\nStep 6: Create an SVM classifier using the SVC class.\n\nStep 7: Train the SVM model using the training data with the fit() method.\n\nStep 8: Use the trained model to predict the class labels for the testing data.\n\nStep 9: Compare the predicted labels with the actual labels.\n\nStep 10: Calculate the classification accuracy.\n\nStep 11: Generate the confusion matrix.\n\nStep 12: Calculate precision, recall, and F1-score for performance evaluation.\n\nStep 13: Display the predicted values and evaluation metrics.\n\nStep 14: Interpret the classification performance of the SVM model.\n\nStep 15: Stop the program.\n\n---------------------------------------------------\nprogram:\nfrom sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.svm import SVC\nfrom sklearn.metrics import (\n    accuracy_score,\n    confusion_matrix,\n    precision_score,\n    recall_score,\n    f1_score\n)\n\n# Load Iris Dataset\niris = load_iris()\nX = iris.data\ny = iris.target\nprint(\"===== IRIS DATASET =====\")\nprint(\"Classes:\", iris.target_names)\nprint(\"Total Samples:\", len(X))\n# Randomly split the dataset\n# 80% Training and 20% Testing\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2\n)\nprint(\"\\n===== TRAINING AND TESTING =====\")\nprint(\"Training Samples:\", len(X_train))\nprint(\"Testing Samples :\", len(X_test))\n# Create SVM Model\nmodel = SVC(kernel='linear')\n\n# Train the Model\nmodel.fit(X_train, y_train)\n\n# Prediction\ny_pred = model.predict(X_test)\nprint(\"\\n===== PREDICTION =====\")\nprint(\"Actual Classes   :\", y_test)\nprint(\"Predicted Classes:\", y_pred)\n\n# Performance Evaluation\naccuracy = accuracy_score(y_test, y_pred)\nprecision = precision_score(y_test, y_pred, average='weighted')\nrecall = recall_score(y_test, y_pred, average='weighted')\nf1 = f1_score(y_test, y_pred, average='weighted')\ncm = confusion_matrix(y_test, y_pred)\n\n# Display Results\nprint(\"\\n===== PERFORMANCE =====\")\nprint(\"Accuracy  :\", round(accuracy * 100, 2), \"%\")\nprint(\"Precision :\", round(precision, 4))\nprint(\"Recall    :\", round(recall, 4))\nprint(\"F1-Score  :\", round(f1, 4))\n\nprint(\"\\n===== CONFUSION MATRIX =====\")\nprint(cm)\n\n---------------------------------------------------\nOutput:\n===== IRIS DATASET =====\nClasses: ['setosa' 'versicolor' 'virginica']\nTotal Samples: 150\n===== TRAINING AND TESTING =====\nTraining Samples: 120\nTesting Samples : 30\n===== PREDICTION =====\nActual Classes   : [0 1 0 2 2 0 2 2 1 2 1 1 1 1 0 2 0 1 2 0 0 0 1 2 1 1 0 0 2 0]\nPredicted Classes: [0 1 0 2 2 0 2 2 1 2 1 1 1 2 0 2 0 1 2 0 0 0 1 2 1 1 0 0 2 0]\n===== PERFORMANCE =====\nAccuracy  : 96.67 %\nPrecision : 0.97\nRecall    : 0.9667\nF1-Score  : 0.9667\n===== CONFUSION MATRIX =====\n[[11  0  0]\n[ 0  9  1]\n[ 0  0  9]\n\n---------------------------------------------------\nresult:\n\nThe Support Vector Machine (SVM) model was successfully implemented to classify the data and evaluate its classification performance.\n\n", "exp8_knn_classification.txt": "exp8:\nTitle: 8. Classification Using K-Nearest Neighbors (KNN) Algorithm\n\n----------------------------------------------------\nAIM\nTo implement the K-Nearest Neighbors (KNN) classification algorithm using a loan dataset to predict whether a loan application will be approved or not approved.\n\nAlgorithm\nStep 1: Import the required libraries such as Pandas, LabelEncoder, StandardScaler, KNeighborsClassifier, train_test_split, accuracy_score, and confusion_matrix.\n\nStep 2: Load the loan dataset from the CSV file using pd.read_csv().\n\nStep 3: Display the first few records and total number of records in the dataset.\n\nStep 4: Select the required columns: ApplicantIncome, LoanAmount, Credit_History, and Loan_Status.\n\nStep 5: Remove rows containing missing values using dropna().\n\nStep 6: Convert the target variable Loan_Status into numerical values using LabelEncoder.\n\nStep 7: Separate the feature variables (X) and target variable (y).\n\nStep 8: Split the dataset into training data (80%) and testing data (20%).\n\nStep 9: Apply feature scaling using StandardScaler to normalize the feature values.\n\nStep 10: Create a K-Nearest Neighbors (KNN) classifier with n_neighbors = 5.\n\nStep 11: Train the KNN model using the scaled training data.\n\nStep 12: Predict the loan status for the testing data.\n\nStep 13: Compare the actual and predicted values.\n\nStep 14: Evaluate the model using Accuracy Score and Confusion Matrix.\n\nStep 15: Enter details of a new applicant and scale the input data.\n\nStep 16: Predict the loan status for the new applicant using the trained KNN model.\n\nStep 17: Display the final result as Approved or Not Approved.\n\n---------------------------------------------------\nprogram:\nimport os\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import LabelEncoder, StandardScaler\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.metrics import accuracy_score, confusion_matrix\n\n# Load dataset\ndf = pd.read_csv(\"loan_data_100_records.csv\")\nfeature_cols = [\"ApplicantIncome\", \"LoanAmount\", \"Credit_History\"]\n\nprint(\"===== LOAN DATASET =====\")\nprint(df.head())\nprint(f\"Total Records: {len(df)}\")\nclean_df = df[feature_cols + [\"Loan_Status\"]].dropna().copy()\nprint(f\"Records after removing missing values: {len(clean_df)}\")\n\n# Encode target\nclean_df[\"Loan_Status\"] = LabelEncoder().fit_transform(clean_df[\"Loan_Status\"])\n\n# Features and target\nX = clean_df[feature_cols]\ny = clean_df[\"Loan_Status\"]\n\n# Split and scale\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)\nprint(f\"Training Samples: {len(X_train)}\")\nprint(f\"Testing Samples : {len(X_test)}\")\n\nscaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\n\n# Train KNN\nknn = KNeighborsClassifier(n_neighbors=5)\nknn.fit(X_train_scaled, y_train)\n\n# Predictions\npred = knn.predict(X_test_scaled)\nresult = pd.DataFrame({\"Actual\": y_test.reset_index(drop=True), \"Predicted\": pred})\nprint(\"===== ACTUAL VS PREDICTED =====\")\nprint(result)\n\n# Accuracy and confusion matrix\naccuracy = accuracy_score(y_test, pred)\ncm = confusion_matrix(y_test, pred)\nprint(\"===== MODEL PERFORMANCE =====\")\nprint(f\"KNN Accuracy: {round(accuracy * 100, 2)} %\")\nprint(\"Confusion Matrix:\")\nprint(cm)\n\n# New applicant prediction\nnew_applicant = pd.DataFrame([[5000, 150, 1]], columns=feature_cols)\nnew_applicant_scaled = scaler.transform(new_applicant)\nprediction = knn.predict(new_applicant_scaled)\n\nprint(\"===== NEW APPLICANT =====\")\nprint(new_applicant)\nprint(\"Loan Status: Approved\" if prediction[0] == 1 else \"Loan Status: Not Approved\")\n\n---------------------------------------------------\nOutput:\n===== LOAN DATASET =====\nGender \tMarried     \tEducation  ... LoanAmount Credit_History  Loan_Status\n0    Male     \tYes      \t\tGraduate  ...        150              1            Y\n1  Female      \tNo      \t\tGraduate  ...        100              1            Y\n2    Male     \tYes  \t\tNot Graduate  ... 200              1            Y\n3    Male     \tYes      \t\tGraduate  ...        120              1            Y\n4  Female     \t No      \t\tGraduate  ...         80              \t0            N\n[5 rows x 9 columns]\nTotal Records: 100\nRecords after removing missing values: 100\nTraining Samples: 80\nTesting Samples : 20\n===== ACTUAL VS PREDICTED =====\nActual  Predicted\n0        1          1\n1        1          1\n2        1          1\n3        1          1\n4        0          0\n5        1          1\n6        0          1\n7        1          1\n8        0          0\n9        0          0\n10       1          1\n11       1          1\n12       0          0\n13       1          1\n14       0          0\n15       1          1\n16       1          1\n17       1          1\n18       1          1\n19       1          1\n===== MODEL PERFORMANCE =====\nKNN Accuracy: 95.0 %\nConfusion Matrix:\n[[ 5  1]\n[ 0 14]]\n===== NEW APPLICANT =====\nApplicantIncome  LoanAmount  Credit_History\n0             5000         150               1\nLoan Status: Approved\n\n---------------------------------------------------\nresult:\n\nThe K-Nearest Neighbors (KNN) algorithm was successfully implemented and tested on the loan dataset, and the loan approval status was predicted accurately.\n", "exp9_feedforward_neural_network.txt": "exp9:\nTitle: 9. Classification Using Feedforward Neural Network with TensorFlow\n\n----------------------------------------------------\nAIM\nTo construct and train a Feedforward Neural Network using TensorFlow to classify diabetes risk data into Low Risk or High Risk based on Glucose Level, BMI, and Age.\n\nAlgorithm\nStep 1: Import the required libraries: NumPy, TensorFlow, train_test_split, and StandardScaler.\n\nStep 2: Create the dataset with Glucose Level, BMI, and Age as input features and Low Risk (0) / High Risk (1) as target classes.\n\nStep 3: Split the dataset into 80% training data and 20% testing data.\n\nStep 4: Standardize the input features using StandardScaler.\n\nStep 5: Construct the Feedforward Neural Network with:\n\nInput layer with 3 input features\n\nFirst hidden layer with 8 neurons and ReLU activation\n\nSecond hidden layer with 4 neurons and ReLU activation\n\nOutput layer with 1 neuron and Sigmoid activation\n\nStep 6: Compile the model using the Adam optimizer, binary cross-entropy loss function, and accuracy as the evaluation metric.\n\nStep 7: Train the neural network using the training data for 50 epochs with a batch size of 4.\n\nStep 8: Evaluate the trained model using the testing data and display the test accuracy.\n\nStep 9: Enter new patient data containing Glucose Level, BMI, and Age and standardize it using the same scaler.\n\nStep 10: Use the trained model to predict the class of the new data.\n\nStep 11: If the model output is greater than or equal to 0.5, classify it as High Risk; otherwise, classify it as Low Risk.\n\nStep 12: Display the predicted result.\n\n---------------------------------------------------\nprogram:\nimport os\nimport sys\nimport warnings\n\nos.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\nos.environ[\"TF_ENABLE_ONEDNN_OPTS\"] = \"0\"\nwarnings.filterwarnings(\"ignore\")\n\n# Suppress TensorFlow startup logs written to stderr\nstderr = sys.stderr\nsys.stderr = open(os.devnull, \"w\")\n\nimport numpy as np\nimport tensorflow as tf\n\nsys.stderr = stderr\n\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\n\n# Create Dataset; Features: Glucose Level, BMI, Age\nX = np.array([\n    [85, 22.0, 25],\n    [90, 23.5, 30],\n    [95, 24.0, 28],\n    [100, 25.5, 35],\n    [105, 26.0, 40],\n    [110, 27.5, 45],\n    [115, 28.0, 38],\n    [120, 29.5, 50],\n    [125, 30.0, 42],\n    [130, 31.5, 48],\n    [135, 32.0, 55],\n    [140, 33.0, 52],\n    [145, 34.0, 58],\n    [150, 35.0, 60],\n    [155, 36.0, 62],\n    [160, 37.0, 65],\n    [165, 38.0, 57],\n    [170, 39.0, 68],\n    [175, 40.0, 70],\n    [180, 41.0, 72]\n])\n\n# Target: 0 = Low Risk, 1 = High Risk\ny = np.array([\n    0, 0, 0, 0, 0,\n    0, 0, 0, 0, 0,\n    1, 1, 1, 1, 1,\n    1, 1, 1, 1, 1\n])\n\n# Split Dataset\nX_train, X_test, y_train, y_test = train_test_split(\n    X,\n    y,\n    test_size=0.2,\n    random_state=42,\n    stratify=y\n)\n\nprint(\"Training Samples:\", len(X_train))\nprint(\"Testing Samples :\", len(X_test))\n\n# Scale the Features\nscaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\n\n# Create Feedforward Neural Network\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Input(shape=(3,)),\n    tf.keras.layers.Dense(8, activation=\"relu\"),\n    tf.keras.layers.Dense(4, activation=\"relu\"),\n    tf.keras.layers.Dense(1, activation=\"sigmoid\")\n])\n\n# Compile the Model\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"binary_crossentropy\",\n    metrics=[\"accuracy\"]\n)\n\n# Train the Model\nmodel.fit(\n    X_train_scaled,\n    y_train,\n    epochs=50,\n    batch_size=4,\n    verbose=0\n)\n\n# Evaluate the Model\nloss, accuracy = model.evaluate(\n    X_test_scaled,\n    y_test,\n    verbose=0\n)\n\nprint(\"\\n===== MODEL PERFORMANCE =====\")\nprint(\"Test Accuracy:\", round(accuracy * 100, 2), \"%\")\n\n# Enter New Patient Data\nnew_patient = np.array([\n    [150, 34.0, 55]\n])\n\nprint(\"\\n===== NEW PATIENT =====\")\nprint(f\"Glucose Level : {new_patient[0, 0]}\")\nprint(f\"BMI          : {new_patient[0, 1]}\")\nprint(f\"Age          : {new_patient[0, 2]}\")\n\nnew_patient_scaled = scaler.transform(new_patient)\nprediction = model.predict(new_patient_scaled, verbose=0)\nprobability = prediction[0][0]\n\nprint(\"\\n===== PREDICTION =====\")\nprint(\"Model Output:\", round(float(probability), 4))\nif probability >= 0.5:\n    print(\"Diabetes Risk: High Risk\")\nelse:\n    print(\"Diabetes Risk: Low Risk\")\n\n---------------------------------------------------\nOutput:\nTraining Samples: 16\nTesting Samples : 4\n===== MODEL PERFORMANCE =====\nTest Accuracy: 100.0 %\n===== NEW PATIENT =====\nGlucose Level : 150\nBMI           \t: 34.0\nAge           \t: 55\n===== PREDICTION =====\nModel Output: 0.5739\nDiabetes Risk: High Risk\n\n---------------------------------------------------\nresult:\n\nThus, a Feedforward Neural Network was successfully implemented using TensorFlow to classify diabetes risk data as Low Risk or High Risk.\n\n", "exp10_cnn_image_classification.txt": "exp10:\nTitle: 10. Image Classification Using Convolutional Neural Network (CNN)\n\n----------------------------------------------------\nAIM\nTo design and implement a Convolutional Neural Network (CNN) using TensorFlow to classify handwritten digit images.\n\nAlgorithm\nStep 1: Import the required libraries: TensorFlow, NumPy, Matplotlib, and Random.\n\nStep 2: Load the MNIST handwritten digit dataset containing training and testing images.\n\nStep 3: Display the dataset summary and sample handwritten digit images.\n\nStep 4: Select a limited number of training and testing images for faster execution.\n\nStep 5: Normalize the image pixel values by dividing them by 255.\n\nStep 6: Reshape the images to include the channel dimension required by the CNN.\n\nStep 7: Construct the CNN with:\n\nInput layer\n\nConvolutional layer with ReLU activation\n\nMax Pooling layer\n\nFlatten layer\n\nDense hidden layer with ReLU activation\n\nOutput layer with 10 neurons and Softmax activation\n\nStep 8: Compile the CNN using the Adam optimizer, Sparse Categorical Cross-Entropy loss function, and accuracy metric.\n\nStep 9: Train the CNN using the training images for 2 epochs with a batch size of 64.\n\nStep 10: Evaluate the trained CNN using the testing images and display the test accuracy.\n\nStep 11: Randomly select one image from the testing dataset.\n\nStep 12: Predict the handwritten digit using the trained CNN.\n\nStep 13: Display the actual digit, predicted digit, and selected handwritten digit image.\n\n---------------------------------------------------\nprogram:\n# Handwritten Digit Classification using MNIST Dataset\nimport os\nimport sys\nimport warnings\n\nos.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\nos.environ[\"TF_ENABLE_ONEDNN_OPTS\"] = \"0\"\nwarnings.filterwarnings(\"ignore\")\n\nstderr = sys.stderr\nsys.stderr = open(os.devnull, \"w\")\n\nimport tensorflow as tf\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport random\n\nsys.stderr = stderr\n\n# Load MNIST Dataset\n(X_train, y_train), (X_test, y_test) = tf.keras.datasets.mnist.load_data()\n\n# Display Dataset Summary\nprint(\"===== MNIST DATASET SUMMARY =====\")\nprint(f\"Total Training Images\\t\\t: {len(X_train)}\")\nprint(f\"Total Testing Images\\t\\t: {len(X_test)}\")\nprint(f\"Image Size\\t\\t\\t: {X_train.shape[1]} x {X_train.shape[2]}\")\nprint(\"Number of Classes\\t\\t: 10\")\nprint(\"Classes\\t\\t\\t: 0 to 9\")\n\n# Display Sample Images\nplt.figure(figsize=(8, 4))\nfor i in range(10):\n    plt.subplot(2, 5, i + 1)\n    plt.imshow(X_train[i], cmap=\"gray\")\n    plt.title(\"Digit: \" + str(y_train[i]))\n    plt.axis(\"off\")\n\nplt.suptitle(\"Sample MNIST Handwritten Digits\")\nplt.tight_layout()\nplt.show()\n\n# Use Smaller Dataset for Faster Execution\nX_train = X_train[:2000]\ny_train = y_train[:2000]\nX_test = X_test[:500]\ny_test = y_test[:500]\n\nprint(\"\\n===== DATA USED =====\")\nprint(\"Training Images :\", len(X_train))\nprint(\"Testing Images  :\", len(X_test))\n\n# Normalize Images\nX_train = X_train / 255.0\nX_test = X_test / 255.0\n\n# Add Channel Dimension\nX_train = X_train.reshape(-1, 28, 28, 1)\nX_test = X_test.reshape(-1, 28, 28, 1)\n\n# Create CNN Model\nmodel = tf.keras.Sequential([\n    tf.keras.layers.Input(shape=(28, 28, 1)),\n    tf.keras.layers.Conv2D(16, (3, 3), activation=\"relu\"),\n    tf.keras.layers.MaxPooling2D((2, 2)),\n    tf.keras.layers.Flatten(),\n    tf.keras.layers.Dense(32, activation=\"relu\"),\n    tf.keras.layers.Dense(10, activation=\"softmax\")\n])\n\n# Compile Model\nmodel.compile(\n    optimizer=\"adam\",\n    loss=\"sparse_categorical_crossentropy\",\n    metrics=[\"accuracy\"]\n)\n\n# Train Model\nprint(\"\\n===== MODEL TRAINING =====\")\nmodel.fit(X_train, y_train, epochs=2, batch_size=64)\n\n# Evaluate Model\n_, accuracy = model.evaluate(X_test, y_test, verbose=0)\nprint(\"\\n===== MODEL PERFORMANCE =====\")\nprint(\"Test Accuracy:\", round(accuracy * 100, 2), \"%\")\n\n# Select a Random Test Image\nindex = random.randint(0, len(X_test) - 1)\n\n# Predict the Random Image\nprediction = model.predict(X_test[index:index + 1], verbose=0)\npredicted_digit = np.argmax(prediction[0])\nactual_digit = y_test[index]\n\n# Display Prediction\nprint(\"\\n===== DIGIT PREDICTION =====\")\nprint(\"Test Image No. :\", index)\nprint(\"Actual Digit   :\", actual_digit)\nprint(\"Predicted Digit:\", predicted_digit)\n\n# Display the Random Test Image\nplt.imshow(X_test[index].reshape(28, 28), cmap=\"gray\")\nplt.title(\"Actual: \" + str(actual_digit) + \"\\nPredicted: \" + str(predicted_digit))\nplt.axis(\"off\")\nplt.show()\n\n\n---------------------------------------------------\nOutput:\n===== MNIST DATASET SUMMARY =====\nTotal Training Images\t\t: 60000\nTotal Testing Images\t\t: 10000\nImage Size\t\t\t: 28 x 28\nNumber of Classes\t\t: 10\nClasses\t\t\t: 0 to 9\n\n---------------------------------------------------\nresult:\n\nThus, a Convolutional Neural Network (CNN) was successfully designed and implemented using TensorFlow to classify handwritten digit images.\n\n"};
+const loanCsvData = "Gender,Married,Education,ApplicantIncome,LoanAmount,Credit_History,Loan_Status\nMale,Yes,Graduate,4583,150,1,Y\nFemale,No,Graduate,3000,100,1,Y\nMale,Yes,Not Graduate,2583,200,1,Y\nMale,Yes,Graduate,6000,120,1,Y\nFemale,No,Graduate,2333,80,0,N\nMale,Yes,Not Graduate,3143,238,1,Y\nMale,No,Graduate,3791,109,1,Y\nMale,Yes,Not Graduate,6827,121,1,Y\nMale,Yes,Not Graduate,3273,105,1,N\nFemale,Yes,Graduate,4940,138,1,Y\nMale,No,Graduate,5100,70,0,N\nFemale,Yes,Graduate,3866,247,1,Y\nMale,Yes,Graduate,5714,212,1,Y\nMale,No,Not Graduate,4187,229,1,N\nMale,Yes,Graduate,5108,119,1,N\nMale,No,Graduate,2262,130,1,Y\nMale,Yes,Not Graduate,6089,151,1,Y\nFemale,Yes,Not Graduate,6598,187,1,Y\nFemale,No,Not Graduate,3133,180,1,Y\nMale,Yes,Graduate,7574,158,1,Y\nFemale,No,Not Graduate,6532,52,1,Y\nMale,No,Not Graduate,5561,90,1,Y\nFemale,Yes,Graduate,4444,213,0,N\nMale,Yes,Not Graduate,6418,249,1,N\nMale,No,Not Graduate,4973,128,1,Y\nMale,Yes,Graduate,2566,244,1,Y\nMale,Yes,Not Graduate,3352,117,0,N\nFemale,Yes,Graduate,5268,221,1,Y\nFemale,No,Graduate,2524,136,1,Y\nMale,Yes,Graduate,7169,65,1,Y\nMale,No,Graduate,4281,221,1,Y\nMale,No,Graduate,5334,98,1,Y\nFemale,No,Not Graduate,7972,63,1,Y\nMale,Yes,Not Graduate,2895,113,1,Y\nFemale,Yes,Not Graduate,5789,113,1,Y\nMale,No,Graduate,6428,53,1,N\nMale,Yes,Not Graduate,3751,152,1,N\nMale,No,Graduate,4172,250,0,N\nFemale,No,Not Graduate,4430,105,1,N\nMale,No,Graduate,5905,178,1,N\nMale,Yes,Graduate,2561,202,0,N\nMale,No,Graduate,6666,113,0,N\nMale,Yes,Not Graduate,6630,183,1,Y\nFemale,Yes,Not Graduate,5242,83,1,Y\nFemale,No,Not Graduate,2594,52,0,N\nMale,Yes,Graduate,3085,139,1,Y\nMale,No,Not Graduate,6450,230,1,Y\nMale,No,Graduate,3100,117,0,N\nMale,Yes,Not Graduate,3725,233,1,Y\nFemale,No,Not Graduate,2416,73,0,N\nFemale,Yes,Graduate,3071,213,1,N\nMale,No,Not Graduate,2916,69,1,N\nMale,Yes,Not Graduate,3213,160,1,Y\nFemale,No,Graduate,3720,224,0,N\nMale,No,Not Graduate,3266,110,0,Y\nMale,No,Graduate,4721,250,1,N\nMale,No,Graduate,2885,147,1,Y\nFemale,Yes,Graduate,5770,139,0,N\nMale,Yes,Graduate,5264,134,1,Y\nMale,No,Not Graduate,5274,223,1,N\nFemale,Yes,Graduate,4139,95,0,N\nFemale,Yes,Graduate,4831,236,1,Y\nFemale,Yes,Not Graduate,3557,115,0,N\nFemale,Yes,Graduate,2573,220,1,N\nFemale,Yes,Not Graduate,7463,154,1,Y\nFemale,Yes,Graduate,5105,223,1,Y\nMale,No,Not Graduate,2003,127,1,Y\nFemale,No,Not Graduate,7534,104,1,Y\nMale,Yes,Not Graduate,7185,208,1,Y\nMale,No,Graduate,3207,56,0,N\nFemale,Yes,Not Graduate,7159,197,1,Y\nFemale,No,Not Graduate,7374,226,1,Y\nMale,No,Graduate,7700,182,1,Y\nMale,Yes,Not Graduate,5806,220,1,Y\nFemale,No,Not Graduate,6488,164,0,Y\nFemale,No,Not Graduate,7223,120,1,Y\nFemale,Yes,Not Graduate,7845,123,1,Y\nFemale,No,Graduate,3894,148,1,Y\nMale,Yes,Not Graduate,6445,169,1,Y\nMale,No,Not Graduate,6784,228,0,N\nFemale,No,Graduate,4446,242,0,N\nFemale,Yes,Not Graduate,5570,174,1,Y\nFemale,No,Graduate,3045,209,0,N\nFemale,Yes,Graduate,3111,168,1,Y\nFemale,No,Not Graduate,4677,136,1,Y\nFemale,No,Not Graduate,2670,170,1,Y\nMale,No,Graduate,7339,60,1,Y\nMale,Yes,Graduate,3954,82,1,Y\nMale,Yes,Not Graduate,5021,92,1,Y\nMale,Yes,Not Graduate,2210,129,1,Y\nFemale,No,Graduate,7657,210,1,Y\nFemale,Yes,Graduate,5509,219,1,Y\nFemale,Yes,Not Graduate,2864,160,0,Y\nFemale,Yes,Not Graduate,6274,216,1,Y\nFemale,No,Not Graduate,6853,118,0,N\nMale,Yes,Not Graduate,3997,242,0,N\nFemale,No,Graduate,4662,96,1,Y\nFemale,No,Not Graduate,6883,229,1,Y\nMale,Yes,Graduate,5329,175,1,Y\nMale,No,Not Graduate,2141,73,1,Y\n";
 
+function loadFile() {
+    const file = document.getElementById('fileSelect').value;
+    const viewer = document.getElementById('viewer');
+    const btnDownloadCsv = document.getElementById('btnDownloadCsv');
+    
+    // Show the 'Download Dataset (.csv)' button specifically for Experiment 8
+    if (file === 'exp8_knn_classification.txt') {
+        btnDownloadCsv.style.display = 'inline-flex';
+    } else {
+        btnDownloadCsv.style.display = 'none';
+    }
+
+    // First display embedded content immediately for zero latency & offline support
+    if (embeddedData[file]) {
+        viewer.value = embeddedData[file];
+    }
+
+    // Then try fetch in case files were updated externally via web server
     fetch(file)
         .then(response => {
             if (!response.ok) {
-                throw new Error("File not found");
+                throw new Error('HTTP ' + response.status);
             }
             return response.text();
         })
         .then(data => {
-            document.getElementById("viewer").value = data;
+            viewer.value = data;
         })
-        .catch(err => {
-            document.getElementById("viewer").value = "Error loading file: " + err.message;
+        .catch(() => {
+            if (!embeddedData[file]) {
+                viewer.value = 'Error loading ' + file;
+            }
         });
 }
 
-// Load first file automatically
+function copyContent() {
+    const viewer = document.getElementById('viewer');
+    const status = document.getElementById('copyStatus');
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(viewer.value).then(() => {
+            showCopySuccess(status, '✓ Copied to clipboard!', '#28a745');
+        }).catch(() => {
+            fallbackCopy(viewer, status);
+        });
+    } else {
+        fallbackCopy(viewer, status);
+    }
+}
+
+function fallbackCopy(viewer, status) {
+    viewer.removeAttribute('readonly');
+    viewer.select();
+    try {
+        document.execCommand('copy');
+        showCopySuccess(status, '✓ Copied to clipboard!', '#28a745');
+    } catch (err) {
+        status.textContent = 'Failed to copy';
+        status.style.color = '#dc3545';
+    }
+    viewer.setAttribute('readonly', 'true');
+    window.getSelection().removeAllRanges();
+}
+
+function showCopySuccess(status, text, color) {
+    status.textContent = text;
+    status.style.color = color;
+    status.style.opacity = '1';
+    setTimeout(() => {
+        status.style.opacity = '0';
+        setTimeout(() => {
+            status.textContent = '';
+        }, 300);
+    }, 2500);
+}
+
+function downloadCurrentFile() {
+    const select = document.getElementById('fileSelect');
+    const filename = select.value;
+    const content = document.getElementById('viewer').value;
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function downloadLoanCsv() {
+    const status = document.getElementById('copyStatus');
+    const blob = new Blob([loanCsvData.trim() + '\n'], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'loan_data_100_records.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showCopySuccess(status, '✓ loan_data_100_records.csv Downloaded!', '#fd7e14');
+}
+
+// Load initial experiment on startup
 window.onload = loadFile;
 </script>
 

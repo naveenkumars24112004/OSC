@@ -1,0 +1,101 @@
+Gender,Married,Education,ApplicantIncome,LoanAmount,Credit_History,Loan_Status
+Male,Yes,Graduate,4583,150,1,Y
+Female,No,Graduate,3000,100,1,Y
+Male,Yes,Not Graduate,2583,200,1,Y
+Male,Yes,Graduate,6000,120,1,Y
+Female,No,Graduate,2333,80,0,N
+Male,Yes,Not Graduate,3143,238,1,Y
+Male,No,Graduate,3791,109,1,Y
+Male,Yes,Not Graduate,6827,121,1,Y
+Male,Yes,Not Graduate,3273,105,1,N
+Female,Yes,Graduate,4940,138,1,Y
+Male,No,Graduate,5100,70,0,N
+Female,Yes,Graduate,3866,247,1,Y
+Male,Yes,Graduate,5714,212,1,Y
+Male,No,Not Graduate,4187,229,1,N
+Male,Yes,Graduate,5108,119,1,N
+Male,No,Graduate,2262,130,1,Y
+Male,Yes,Not Graduate,6089,151,1,Y
+Female,Yes,Not Graduate,6598,187,1,Y
+Female,No,Not Graduate,3133,180,1,Y
+Male,Yes,Graduate,7574,158,1,Y
+Female,No,Not Graduate,6532,52,1,Y
+Male,No,Not Graduate,5561,90,1,Y
+Female,Yes,Graduate,4444,213,0,N
+Male,Yes,Not Graduate,6418,249,1,N
+Male,No,Not Graduate,4973,128,1,Y
+Male,Yes,Graduate,2566,244,1,Y
+Male,Yes,Not Graduate,3352,117,0,N
+Female,Yes,Graduate,5268,221,1,Y
+Female,No,Graduate,2524,136,1,Y
+Male,Yes,Graduate,7169,65,1,Y
+Male,No,Graduate,4281,221,1,Y
+Male,No,Graduate,5334,98,1,Y
+Female,No,Not Graduate,7972,63,1,Y
+Male,Yes,Not Graduate,2895,113,1,Y
+Female,Yes,Not Graduate,5789,113,1,Y
+Male,No,Graduate,6428,53,1,N
+Male,Yes,Not Graduate,3751,152,1,N
+Male,No,Graduate,4172,250,0,N
+Female,No,Not Graduate,4430,105,1,N
+Male,No,Graduate,5905,178,1,N
+Male,Yes,Graduate,2561,202,0,N
+Male,No,Graduate,6666,113,0,N
+Male,Yes,Not Graduate,6630,183,1,Y
+Female,Yes,Not Graduate,5242,83,1,Y
+Female,No,Not Graduate,2594,52,0,N
+Male,Yes,Graduate,3085,139,1,Y
+Male,No,Not Graduate,6450,230,1,Y
+Male,No,Graduate,3100,117,0,N
+Male,Yes,Not Graduate,3725,233,1,Y
+Female,No,Not Graduate,2416,73,0,N
+Female,Yes,Graduate,3071,213,1,N
+Male,No,Not Graduate,2916,69,1,N
+Male,Yes,Not Graduate,3213,160,1,Y
+Female,No,Graduate,3720,224,0,N
+Male,No,Not Graduate,3266,110,0,Y
+Male,No,Graduate,4721,250,1,N
+Male,No,Graduate,2885,147,1,Y
+Female,Yes,Graduate,5770,139,0,N
+Male,Yes,Graduate,5264,134,1,Y
+Male,No,Not Graduate,5274,223,1,N
+Female,Yes,Graduate,4139,95,0,N
+Female,Yes,Graduate,4831,236,1,Y
+Female,Yes,Not Graduate,3557,115,0,N
+Female,Yes,Graduate,2573,220,1,N
+Female,Yes,Not Graduate,7463,154,1,Y
+Female,Yes,Graduate,5105,223,1,Y
+Male,No,Not Graduate,2003,127,1,Y
+Female,No,Not Graduate,7534,104,1,Y
+Male,Yes,Not Graduate,7185,208,1,Y
+Male,No,Graduate,3207,56,0,N
+Female,Yes,Not Graduate,7159,197,1,Y
+Female,No,Not Graduate,7374,226,1,Y
+Male,No,Graduate,7700,182,1,Y
+Male,Yes,Not Graduate,5806,220,1,Y
+Female,No,Not Graduate,6488,164,0,Y
+Female,No,Not Graduate,7223,120,1,Y
+Female,Yes,Not Graduate,7845,123,1,Y
+Female,No,Graduate,3894,148,1,Y
+Male,Yes,Not Graduate,6445,169,1,Y
+Male,No,Not Graduate,6784,228,0,N
+Female,No,Graduate,4446,242,0,N
+Female,Yes,Not Graduate,5570,174,1,Y
+Female,No,Graduate,3045,209,0,N
+Female,Yes,Graduate,3111,168,1,Y
+Female,No,Not Graduate,4677,136,1,Y
+Female,No,Not Graduate,2670,170,1,Y
+Male,No,Graduate,7339,60,1,Y
+Male,Yes,Graduate,3954,82,1,Y
+Male,Yes,Not Graduate,5021,92,1,Y
+Male,Yes,Not Graduate,2210,129,1,Y
+Female,No,Graduate,7657,210,1,Y
+Female,Yes,Graduate,5509,219,1,Y
+Female,Yes,Not Graduate,2864,160,0,Y
+Female,Yes,Not Graduate,6274,216,1,Y
+Female,No,Not Graduate,6853,118,0,N
+Male,Yes,Not Graduate,3997,242,0,N
+Female,No,Graduate,4662,96,1,Y
+Female,No,Not Graduate,6883,229,1,Y
+Male,Yes,Graduate,5329,175,1,Y
+Male,No,Not Graduate,2141,73,1,Y

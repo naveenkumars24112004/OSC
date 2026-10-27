@@ -1,0 +1,121 @@
+exp7:
+Title: 7. Classification Using Support Vector Machine (SVM)
+
+----------------------------------------------------
+AIM
+To apply the Support Vector Machine (SVM) algorithm on the Iris dataset and evaluate its classification performance using accuracy and other performance metrics.
+
+Algorithm
+Step 1: Start the program.
+
+Step 2: Import the required libraries (load_iris, train_test_split, SVC, and evaluation metrics).
+
+Step 3: Load the Iris dataset.
+
+Step 4: Separate the dataset into input features (X) and target labels (y).
+
+Step 5: Split the dataset into training and testing sets using train_test_split().
+
+Step 6: Create an SVM classifier using the SVC class.
+
+Step 7: Train the SVM model using the training data with the fit() method.
+
+Step 8: Use the trained model to predict the class labels for the testing data.
+
+Step 9: Compare the predicted labels with the actual labels.
+
+Step 10: Calculate the classification accuracy.
+
+Step 11: Generate the confusion matrix.
+
+Step 12: Calculate precision, recall, and F1-score for performance evaluation.
+
+Step 13: Display the predicted values and evaluation metrics.
+
+Step 14: Interpret the classification performance of the SVM model.
+
+Step 15: Stop the program.
+
+---------------------------------------------------
+program:
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    precision_score,
+    recall_score,
+    f1_score
+)
+
+# Load Iris Dataset
+iris = load_iris()
+X = iris.data
+y = iris.target
+print("===== IRIS DATASET =====")
+print("Classes:", iris.target_names)
+print("Total Samples:", len(X))
+# Randomly split the dataset
+# 80% Training and 20% Testing
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2
+)
+print("\n===== TRAINING AND TESTING =====")
+print("Training Samples:", len(X_train))
+print("Testing Samples :", len(X_test))
+# Create SVM Model
+model = SVC(kernel='linear')
+
+# Train the Model
+model.fit(X_train, y_train)
+
+# Prediction
+y_pred = model.predict(X_test)
+print("\n===== PREDICTION =====")
+print("Actual Classes   :", y_test)
+print("Predicted Classes:", y_pred)
+
+# Performance Evaluation
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='weighted')
+recall = recall_score(y_test, y_pred, average='weighted')
+f1 = f1_score(y_test, y_pred, average='weighted')
+cm = confusion_matrix(y_test, y_pred)
+
+# Display Results
+print("\n===== PERFORMANCE =====")
+print("Accuracy  :", round(accuracy * 100, 2), "%")
+print("Precision :", round(precision, 4))
+print("Recall    :", round(recall, 4))
+print("F1-Score  :", round(f1, 4))
+
+print("\n===== CONFUSION MATRIX =====")
+print(cm)
+
+---------------------------------------------------
+Output:
+===== IRIS DATASET =====
+Classes: ['setosa' 'versicolor' 'virginica']
+Total Samples: 150
+===== TRAINING AND TESTING =====
+Training Samples: 120
+Testing Samples : 30
+===== PREDICTION =====
+Actual Classes   : [0 1 0 2 2 0 2 2 1 2 1 1 1 1 0 2 0 1 2 0 0 0 1 2 1 1 0 0 2 0]
+Predicted Classes: [0 1 0 2 2 0 2 2 1 2 1 1 1 2 0 2 0 1 2 0 0 0 1 2 1 1 0 0 2 0]
+===== PERFORMANCE =====
+Accuracy  : 96.67 %
+Precision : 0.97
+Recall    : 0.9667
+F1-Score  : 0.9667
+===== CONFUSION MATRIX =====
+[[11  0  0]
+[ 0  9  1]
+[ 0  0  9]
+
+---------------------------------------------------
+result:
+
+The Support Vector Machine (SVM) model was successfully implemented to classify the data and evaluate its classification performance.
+

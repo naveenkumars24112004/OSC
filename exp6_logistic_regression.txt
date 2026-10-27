@@ -1,0 +1,107 @@
+exp6:
+Title: 6. Binary Classification Using Logistic Regression
+
+----------------------------------------------------
+AIM
+To build a Logistic Regression classifier for a binary classification task (Spam Detection) and classify an email as Spam or Not Spam based on its text content.
+
+Algorithm
+Step 1: Start the program.
+
+Step 2: Import the required libraries (CountVectorizer and LogisticRegression).
+
+Step 3: Create the training dataset containing email messages and their corresponding labels (Spam = 1, Not Spam = 0).
+
+Step 4: Display the training data and labels.
+
+Step 5: Create a CountVectorizer object to convert text data into numerical features.
+
+Step 6: Transform the training emails into a feature matrix using fit_transform().
+
+Step 7: Create a Logistic Regression model.
+
+Step 8: Train the Logistic Regression model using the fit() method with the feature matrix and labels.
+
+Step 9: Create the testing dataset containing the email to be classified.
+
+Step 10: Display the testing email.
+
+Step 11: Transform the testing email into numerical features using the trained vectorizer.
+
+Step 12: Predict whether the email is Spam or Not Spam using the trained Logistic Regression model.
+
+Step 13: Display the prediction result.
+
+Step 14: If the prediction is 1, display "The email is classified as SPAM."
+
+Step 15: Otherwise, display "The email is classified as NOT SPAM."
+
+Step 16: Stop the program.
+
+---------------------------------------------------
+program:
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
+
+# Training Data
+train_emails = [
+    "Congratulations! You won a free lottery",
+    "Claim your prize now",
+    "Limited time offer",
+    "Meeting at 10 AM tomorrow",
+    "Project report submission",
+    "Please attend the class today"
+]
+
+# 1 = Spam, 0 = Not Spam
+train_labels = [1, 1, 1, 0, 0, 0]
+print("===== TRAINING DATA =====")
+for email, label in zip(train_emails, train_labels):
+    print(email, "-->", "Spam" if label == 1 else "Not Spam")
+# Convert text into numerical features
+vectorizer = CountVectorizer()
+X_train = vectorizer.fit_transform(train_emails)
+# Train Logistic Regression Model
+model = LogisticRegression()
+model.fit(X_train, train_labels)
+
+# Testing Data
+test_email = ["Free prize available now"]
+print("\n===== TESTING DATA =====")
+print(test_email[0])
+X_test = vectorizer.transform(test_email)
+
+
+# Prediction
+prediction = model.predict(X_test)
+print("\n===== PREDICTION =====")
+print(prediction)
+
+# Result
+print("\n===== RESULT =====")
+if prediction[0] == 1:
+    print("The email is classified as SPAM.")
+else:
+    print("The email is classified as NOT SPAM.")
+
+---------------------------------------------------
+Output:
+===== TRAINING DATA =====
+Congratulations! You won a free lottery --> Spam
+Claim your prize now --> Spam
+Limited time offer --> Spam
+Meeting at 10 AM tomorrow --> Not Spam
+Project report submission --> Not Spam
+Please attend the class today --> Not Spam
+===== TESTING DATA =====
+Free prize available now
+===== PREDICTION =====
+[1]
+===== RESULT =====
+The email is classified as SPAM.
+
+---------------------------------------------------
+result:
+
+The Logistic Regression model was successfully implemented to classify emails as Spam or Not Spam.
+

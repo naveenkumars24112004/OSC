@@ -1,0 +1,80 @@
+exp4:
+Title: 4. Optimization Problem Using Hill Climbing Algorithm
+
+----------------------------------------------------
+AIM
+To implement the Hill Climbing algorithm for solving an optimization problem and find the optimal solution using an objective function.
+
+Algorithm
+Step 1: Start.
+
+Step 2: Define the objective function to be optimized.
+
+Step 3: Select an initial solution (starting point).
+
+Step 4: Generate the neighboring solutions (left and right).
+
+Step 5: Evaluate the objective function for the current solution and its neighboring solutions.
+
+Step 6: Compare the neighboring solutions with the current solution.
+
+Step 7: Move to the neighboring solution if it has a better objective value.
+
+Step 8: Repeat Steps 4 to 7 until no neighboring solution has a better objective value.
+
+Step 9: Display the optimal solution and the maximum objective value.
+
+Step 10: Stop.
+
+---------------------------------------------------
+program:
+# Objective Function
+def objective_function(x):
+    return -x * x + 10 * x
+
+# Hill Climbing Function
+def hill_climbing(start):
+    current = start
+    step_size = 1
+    while True:
+        # Generate neighboring solutions
+        left = current - step_size
+        right = current + step_size
+        # Evaluate current and neighboring states
+        current_value = objective_function(current)
+        left_value = objective_function(left)
+        right_value = objective_function(right)
+        # Display current state
+        print("Current x =", current, " Objective Value =", current_value)
+        # Move to the better neighboring state
+        if left_value > current_value:
+            current = left
+        elif right_value > current_value:
+            current = right
+        # Stop if no better neighbor exists
+        else:
+            return current, current_value
+
+# Main Program
+start_point = 0
+best_x, best_value = hill_climbing(start_point)
+print("\nBest Solution Found")
+print("Optimal x =", best_x)
+print("Maximum Value =", best_value)
+
+---------------------------------------------------
+Output:
+Current x = 0  Objective Value = 0
+Current x = 1  Objective Value = 9
+Current x = 2  Objective Value = 16
+Current x = 3  Objective Value = 21
+Current x = 4  Objective Value = 24
+Current x = 5  Objective Value = 25
+Best Solution Found
+Optimal x = 5
+Maximum Value = 25
+
+---------------------------------------------------
+result:
+
+Thus, the Hill Climbing algorithm was successfully implemented and found the optimal solution at x = 5 with a maximum value of 25.

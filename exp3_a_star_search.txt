@@ -1,0 +1,134 @@
+exp3:
+Title: 3. Optimal Pathfinding Using A* Search Algorithm
+
+----------------------------------------------------
+AIM
+To design and implement the A* Search algorithm using a suitable heuristic function to find the optimal path from a start node to a goal node.
+
+Algorithm
+Step 1: Start.
+
+Step 2: Define the graph with nodes, edges, and their corresponding path costs.
+
+Step 3: Define the heuristic value h(n) for each node.
+
+Step 4: Insert the start node into the priority queue (OPEN list) with its f(n) value.
+
+Step 5: Remove the node having the smallest f(n) value from the priority queue.
+
+Step 6: If the selected node is the goal node, display the optimal path and total cost, then stop.
+
+Step 7: Otherwise, mark the selected node as visited.
+
+Step 8: Generate all neighboring nodes of the current node.
+
+Step 9: For each neighboring node, calculate:
+
+g(n) = Actual cost from the start node.
+
+h(n) = Heuristic estimate to the goal.
+
+f(n)=g(n)+h(n).
+
+Step 10: Insert the neighboring nodes into the priority queue according to their f(n) values.
+
+Step 11: Repeat Steps 5 to 10 until the goal node is reached or no path exists.
+
+Step 12: Stop.
+
+---------------------------------------------------
+program:
+import heapq
+# Graph with edge costs
+graph = {
+    'A': [('B', 2), ('C', 4)],
+    'B': [('D', 7), ('E', 3)],
+    'C': [('F', 2)],
+    'D': [('G', 1)],
+    'E': [('G', 5)],
+    'F': [('G', 3)],
+    'G': []
+}
+# Heuristic values
+heuristic = {
+    'A': 9,
+    'B': 8,
+    'C': 5,
+    'D': 1,
+    'E': 5,
+    'F': 3,
+    'G': 0
+}
+
+# A* Search Function
+def astar(start, goal):
+    # Priority Queue
+    queue = []
+    # (f, g, node, path)
+    heapq.heappush(queue, (heuristic[start], 0, start, [start]))
+    visited = []
+    while queue:
+        f, g, current, path = heapq.heappop(queue)
+        # Ignore already visited nodes
+        if current in visited:
+            continue
+        print("Current Node :", current)
+        print("g(n) =", g)
+        print("h(n) =", heuristic[current])
+        print("f(n) =", f)
+        print()
+
+        visited.append(current)
+
+        # Goal reached
+        if current == goal:
+            return path, g
+
+        # Visit neighbouring nodes
+        for neighbor, cost in graph[current]:
+            if neighbor not in visited:
+                new_g = g + cost
+                new_f = new_g + heuristic[neighbor]
+                heapq.heappush(queue,
+                               (new_f,
+                                new_g,
+                                neighbor,
+                                path + [neighbor]))
+    return None, None
+
+# Main Program
+start = 'A'
+goal = 'G'
+path, cost = astar(start, goal)
+
+print("-------------------------")
+print("Optimal Path :", " -> ".join(path))
+print("Total Cost   :", cost)
+
+---------------------------------------------------
+Output:
+Current Node : A
+g(n) = 0
+h(n) = 9
+f(n) = 9
+Current Node : C
+g(n) = 4
+h(n) = 5
+f(n) = 9
+Current Node : F
+g(n) = 6
+h(n) = 3
+f(n) = 9
+Current Node : G
+g(n) = 9
+h(n) = 0
+f(n) = 9
+-------------------------
+Optimal Path : A -> C -> F -> G
+Total Cost : 9
+
+---------------------------------------------------
+result:
+
+Thus, the A* Search algorithm was successfully implemented using a suitable heuristic function to find the optimal path from the start node to the goal node
+
